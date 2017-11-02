@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
 
-    private List<String> mUrls = new ArrayList<>();
+    private List<MovieDAO> movies = new ArrayList<>();
 
     public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -29,8 +30,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         }
     }
 
-    public MoviesAdapter(List<String> posterPaths) {
-        mUrls = posterPaths;
+    public MoviesAdapter(List<MovieDAO> posterPaths) {
+        movies = posterPaths;
     }
 
     @Override
@@ -47,17 +48,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
-        String posterUrl = mUrls.get(position);
+        String posterUrl = movies.get(position).getPosterUrl();
         Context context = holder.listItem.getContext();
 
         Picasso.with(context).load(posterUrl)
-
                 .into(holder.listItem);
     }
 
 
     @Override
     public int getItemCount() {
-        return mUrls == null ? 0 : mUrls.size();
+        return movies == null ? 0 : movies.size();
     }
 }

@@ -24,31 +24,19 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<MovieDAO> movieList;
-    private List<String> postersPaths = new ArrayList<>();
+    private List<MovieDAO> movieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recyclerview_movies);
-
-        String[] urls = {
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg",
-                "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"
-        };
-
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MoviesAdapter(postersPaths);
+        mAdapter = new MoviesAdapter(movieList);
         mRecyclerView.setAdapter(mAdapter);
 
         loadMoviesData();
@@ -84,14 +72,17 @@ public class MainActivity extends AppCompatActivity {
 
                 for(int i = 0; i < movies.length(); i++) {
                     String posterPath = movies.getJSONObject(i).get("poster_path").toString();
-                    postersPaths.add("http://image.tmdb.org/t/p/w185/" + posterPath);
-                }
+                    String posterUrl = "http://image.tmdb.org/t/p/w185/" + posterPath;
 
-//                String poster_path = movies.getJSONObject(0).get("poster_path").toString();
+                    String movieTitle = movies.getJSONObject(i).get("title").toString();
+                    movieList.add(new MovieDAO(posterUrl, movieTitle));
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            mAdapter.notifyDataSetChanged();
         }
     }
 
