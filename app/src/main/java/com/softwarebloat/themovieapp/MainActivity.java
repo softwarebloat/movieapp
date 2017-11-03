@@ -1,10 +1,15 @@
 package com.softwarebloat.themovieapp;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
@@ -43,7 +48,31 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mAdapter = new MoviesAdapter(movieList, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        loadMoviesData();
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        loadMoviesListIfConnectionIsAvailable(cm);
+
+    }
+
+    //todo: polish needed
+    private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm) {
+
+        LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);
+        Button retryButton = findViewById(R.id.btn_retry);
+
+        if(MovieNetworkUtils.isDeviceOnline(cm)) {
+            noConnectionItems.setVisibility(INVISIBLE);
+            loadMoviesData();
+        } else {
+            noConnectionItems.setVisibility(VISIBLE);
+        }
+
+        retryButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMoviesListIfConnectionIsAvailable(cm);
+            }
+        });
     }
 
     private void loadMoviesData() {

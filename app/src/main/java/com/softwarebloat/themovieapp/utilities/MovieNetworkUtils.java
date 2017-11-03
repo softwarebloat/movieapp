@@ -1,6 +1,10 @@
 package com.softwarebloat.themovieapp.utilities;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.softwarebloat.themovieapp.BuildConfig;
@@ -16,21 +20,29 @@ public class MovieNetworkUtils {
 
     //http://api.themoviedb.org/3/movie/popular?
 
-    final static String TMDB_BASE_URL = "http://api.themoviedb.org/3/movie/popular";
+    private final static String TMDB_BASE_URL = "http://api.themoviedb.org/3/";
     final static String POPULAR_ENDPOINT = "movie/popular";
-    final static String TOPRATED_ENDPOINT = "movie/top_rated";
+    private final static String TOPRATED_ENDPOINT = "movie/top_rated";
 
-    final static String API_KEY_QUERY_PARAM = "api_key";
-    //todo: remove from here
-    final static String API_KEY = BuildConfig.MOVIE_API_KEY;
+    private final static String API_KEY_QUERY_PARAM = "api_key";
+    private final static String API_KEY = BuildConfig.MOVIE_API_KEY;
 
 
 
     final static String POSTER_SIZE = "w185";
 
 
+    public static boolean isDeviceOnline(ConnectivityManager connectivityManager) {
+
+        assert connectivityManager != null;
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnected();
+    }
+
     public static URL buildUrl() {
         Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendEncodedPath(TOPRATED_ENDPOINT)
                 .appendQueryParameter(API_KEY_QUERY_PARAM, API_KEY)
                 .build();
 
