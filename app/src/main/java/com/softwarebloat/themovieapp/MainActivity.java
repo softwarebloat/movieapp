@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
@@ -18,25 +19,28 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import static android.support.v7.widget.RecyclerView.*;
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
+
+    private Adapter mAdapter;
+    private LayoutManager mLayoutManager;
 
     private List<MovieDAO> movieList = new ArrayList<>();
+
+    private Toast mToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = findViewById(R.id.recyclerview_movies);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MoviesAdapter(movieList);
+        mAdapter = new MoviesAdapter(movieList, this);
         mRecyclerView.setAdapter(mAdapter);
 
         loadMoviesData();
@@ -45,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
     private void loadMoviesData() {
         URL movieSearchUrl = MovieNetworkUtils.buildUrl();
         new MovieQueryTask().execute(movieSearchUrl);
+    }
+
+    @Override
+    public void onListItemClick(String clickedItem) {
+
+        if(mToast != null) {
+            mToast.cancel();
+        }
+
+        mToast = Toast.makeText(this, clickedItem, Toast.LENGTH_LONG);
+        mToast.show();
     }
 
     public class MovieQueryTask extends AsyncTask<URL, Void, String> {
