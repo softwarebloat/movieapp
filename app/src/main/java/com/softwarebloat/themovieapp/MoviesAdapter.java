@@ -24,7 +24,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(String clickedItem);
+        void onListItemClick(MovieDAO movie);
     }
 
     private List<MovieDAO> movies = new ArrayList<>();
@@ -40,7 +40,18 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         }
         @Override
         public void onClick(View v) {
-            mOnClickListener.onListItemClick(movies.get(getAdapterPosition()).getMovieTitle());
+
+            int item = getAdapterPosition();
+
+            String posterUrl = movies.get(item).getPosterUrl();
+
+            String movieTitle = movies.get(item).getMovieTitle();
+            String relaseDate = movies.get(item).getReleaseDate();
+            String voteAverage = movies.get(item).getVoteAverage();
+            String plotSynopsis = movies.get(item).getPlotSynopsis();
+
+            MovieDAO movie = new MovieDAO(posterUrl, movieTitle, relaseDate, voteAverage, plotSynopsis);
+            mOnClickListener.onListItemClick(movie);
         }
 
     }

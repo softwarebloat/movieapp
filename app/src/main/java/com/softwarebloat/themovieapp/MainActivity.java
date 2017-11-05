@@ -1,5 +1,6 @@
 package com.softwarebloat.themovieapp;
 
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -122,14 +123,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     }
 
     @Override
-    public void onListItemClick(String clickedItem) {
+    public void onListItemClick(MovieDAO movie) {
 
-        if(mToast != null) {
-            mToast.cancel();
-        }
+        Intent MovieDetailActivityIntent = new Intent(this, MovieDetailActivity.class);
 
-        mToast = Toast.makeText(this, clickedItem, Toast.LENGTH_LONG);
-        mToast.show();
+        MovieDetailActivityIntent.putExtra("movie_data", movie);
+
+        startActivity(MovieDetailActivityIntent);
     }
 
     public class MovieQueryTask extends AsyncTask<URL, Void, String> {
@@ -160,7 +160,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                     String posterUrl = "http://image.tmdb.org/t/p/w185/" + posterPath;
 
                     String movieTitle = movies.getJSONObject(i).get("title").toString();
-                    movieList.add(new MovieDAO(posterUrl, movieTitle));
+                    String relaseDate = movies.getJSONObject(i).get("release_date").toString();
+                    String voteAverage = movies.getJSONObject(i).get("vote_average").toString();
+                    String plotSynopsis = movies.getJSONObject(i).get("overview").toString();
+
+                    movieList.add(new MovieDAO(posterUrl, movieTitle, relaseDate, voteAverage, plotSynopsis));
                 }
 
             } catch (JSONException e) {
