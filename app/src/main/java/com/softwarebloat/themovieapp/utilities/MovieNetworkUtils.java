@@ -18,8 +18,6 @@ import java.util.Scanner;
 
 public class MovieNetworkUtils {
 
-    //http://api.themoviedb.org/3/movie/popular?
-
     private final static String TMDB_BASE_URL = "http://api.themoviedb.org/3/";
     final static String POPULAR_ENDPOINT = "movie/popular";
     private final static String TOPRATED_ENDPOINT = "movie/top_rated";
@@ -31,6 +29,10 @@ public class MovieNetworkUtils {
 
     final static String POSTER_SIZE = "w185";
 
+    public enum SortMethod {
+        DEFAULT, TOPRATED, POPULAR
+    }
+
 
     public static boolean isDeviceOnline(ConnectivityManager connectivityManager) {
 
@@ -40,9 +42,12 @@ public class MovieNetworkUtils {
         return netInfo != null && netInfo.isConnected();
     }
 
-    public static URL buildUrl() {
+    public static URL buildUrl(SortMethod sortMethod) {
+
+        String sort_endpoint = getSortEndpoint(sortMethod);
+
         Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendEncodedPath(TOPRATED_ENDPOINT)
+                .appendEncodedPath(sort_endpoint)
                 .appendQueryParameter(API_KEY_QUERY_PARAM, API_KEY)
                 .build();
 
@@ -54,6 +59,15 @@ public class MovieNetworkUtils {
         }
 
         return url;
+    }
+
+    private static String getSortEndpoint(SortMethod sortMethod) {
+
+        if(SortMethod.TOPRATED.equals(sortMethod)) {
+            return TOPRATED_ENDPOINT;
+        }
+
+        return POPULAR_ENDPOINT;
     }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

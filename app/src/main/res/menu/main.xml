@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <group android:id="@+id/sort_methods"
+           android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_sort_popular"
+            app:showAsAction="never"
+            android:title="@string/popular_movies"/>
+
+        <item
+            android:id="@+id/action_sort_toprated"
+            app:showAsAction="never"
+            android:title="@string/toprated_movies"/>
+
+    </group>
+
+
+</menu>
+
+

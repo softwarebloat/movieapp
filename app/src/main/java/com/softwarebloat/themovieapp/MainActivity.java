@@ -1,12 +1,13 @@
 package com.softwarebloat.themovieapp;
 
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,22 +25,28 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.v7.widget.RecyclerView.*;
+import static android.support.v7.widget.RecyclerView.Adapter;
+import static android.support.v7.widget.RecyclerView.INVISIBLE;
+import static android.support.v7.widget.RecyclerView.LayoutManager;
+import static android.support.v7.widget.RecyclerView.OnClickListener;
+import static android.support.v7.widget.RecyclerView.VISIBLE;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
 
     private Adapter mAdapter;
     private LayoutManager mLayoutManager;
+    private RecyclerView mRecyclerView;
 
     private List<MovieDAO> movieList = new ArrayList<>();
 
     private Toast mToast;
+    private ConnectivityManager cm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerview_movies);
+        mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
@@ -49,20 +56,54 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mRecyclerView.setAdapter(mAdapter);
 
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        loadMoviesListIfConnectionIsAvailable(cm);
+        cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.DEFAULT);
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.getItem(0).setChecked(true);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemClickedId = item.getItemId();
+
+        switch (itemClickedId) {
+            case R.id.action_sort_popular :
+                item.setChecked(true);
+                clearGridData();
+                loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.POPULAR);
+                break;
+            case R.id.action_sort_toprated :
+                item.setChecked(true);
+                clearGridData();
+                loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.TOPRATED);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void clearGridData() {
+        movieList.clear();
+        mAdapter = new MoviesAdapter(movieList, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     //todo: polish needed
-    private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm) {
+    private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm, final MovieNetworkUtils.SortMethod sortMethod) {
 
         LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);
         Button retryButton = findViewById(R.id.btn_retry);
 
         if(MovieNetworkUtils.isDeviceOnline(cm)) {
             noConnectionItems.setVisibility(INVISIBLE);
-            loadMoviesData();
+            loadMoviesData(sortMethod);
         } else {
             noConnectionItems.setVisibility(VISIBLE);
         }
@@ -70,13 +111,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         retryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadMoviesListIfConnectionIsAvailable(cm);
+                loadMoviesListIfConnectionIsAvailable(cm, sortMethod);
             }
         });
     }
 
-    private void loadMoviesData() {
-        URL movieSearchUrl = MovieNetworkUtils.buildUrl();
+    private void loadMoviesData(MovieNetworkUtils.SortMethod sortMethod) {
+        URL movieSearchUrl = MovieNetworkUtils.buildUrl(sortMethod);
         new MovieQueryTask().execute(movieSearchUrl);
     }
 

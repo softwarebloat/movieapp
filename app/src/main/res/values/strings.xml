@@ -4,4 +4,6 @@
     <string name="movie_poster">movie poster</string>
     <string name="NO_CONNECTION_MESSAGE">No internet connection available!</string>
     <string name="retry_btn_text">Retry</string>
+    <string name="popular_movies">Most popular</string>
+    <string name="toprated_movies">Highest rated</string>
 </resources>
