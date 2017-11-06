@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.*;
+
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     final private ListItemClickListener mOnClickListener;
@@ -43,14 +45,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
             int item = getAdapterPosition();
 
-            String posterUrl = movies.get(item).getPosterUrl();
+            String posterUrl = movies.get(item).getPosterPath();
 
             String movieTitle = movies.get(item).getMovieTitle();
-            String relaseDate = movies.get(item).getReleaseDate();
+            String releaseDate = movies.get(item).getReleaseDate();
             String voteAverage = movies.get(item).getVoteAverage();
             String plotSynopsis = movies.get(item).getPlotSynopsis();
 
-            MovieDAO movie = new MovieDAO(posterUrl, movieTitle, relaseDate, voteAverage, plotSynopsis);
+            MovieDAO movie = new MovieDAO(posterUrl, movieTitle, releaseDate, voteAverage, plotSynopsis);
             mOnClickListener.onListItemClick(movie);
         }
 
@@ -71,11 +73,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
-        String posterUrl = movies.get(position).getPosterUrl();
+        String posterUrl = POSTER_BASE_URL + POSTER_W185 + movies.get(position).getPosterPath();
         Context context = holder.listItem.getContext();
 
+        //todo: handle placeholder and error
         Picasso.with(context)
                 .load(posterUrl)
+                .placeholder(R.drawable.not_found)
+                .error(R.drawable.not_found)
                 .into(holder.listItem);
     }
 

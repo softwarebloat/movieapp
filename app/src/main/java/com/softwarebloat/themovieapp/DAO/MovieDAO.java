@@ -5,15 +5,15 @@ import android.os.Parcelable;
 
 public class MovieDAO implements Parcelable {
 
-    private String posterUrl;
+    private String posterPath;
     private String movieTitle;
     private String releaseDate;
     private String voteAverage;
     private String plotSynopsis;
 
-    public MovieDAO(String posterUrl, String movieTitle, String releaseDate, String voteAverage,
+    public MovieDAO(String posterPath, String movieTitle, String releaseDate, String voteAverage,
                     String plotSynopsis) {
-        this.posterUrl = posterUrl;
+        this.posterPath = posterPath;
         this.movieTitle = movieTitle;
         this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
@@ -25,7 +25,7 @@ public class MovieDAO implements Parcelable {
         String[] data = new String[5];
 
         in.readStringArray(data);
-        this.posterUrl = data[0];
+        this.posterPath = data[0];
         this.movieTitle = data[1];
         this.releaseDate = data[2];
         this.voteAverage = data[3];
@@ -33,12 +33,12 @@ public class MovieDAO implements Parcelable {
     }
 
 
-    public String getPosterUrl() {
-        return posterUrl;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
     public String getMovieTitle() {
@@ -82,7 +82,7 @@ public class MovieDAO implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
 
         dest.writeStringArray(new String[] {
-                this.posterUrl,
+                this.posterPath,
                 this.movieTitle,
                 this.releaseDate,
                 this.voteAverage,

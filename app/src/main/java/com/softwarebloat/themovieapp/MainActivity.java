@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
+import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.SortMethod;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,9 @@ import static android.support.v7.widget.RecyclerView.INVISIBLE;
 import static android.support.v7.widget.RecyclerView.LayoutManager;
 import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static android.support.v7.widget.RecyclerView.VISIBLE;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.*;
+
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
 
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
 
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.DEFAULT);
+        loadMoviesListIfConnectionIsAvailable(cm, SortMethod.DEFAULT);
 
     }
 
@@ -78,12 +82,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
             case R.id.action_sort_popular :
                 item.setChecked(true);
                 clearGridData();
-                loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.POPULAR);
+                loadMoviesListIfConnectionIsAvailable(cm, SortMethod.POPULAR);
                 break;
             case R.id.action_sort_toprated :
                 item.setChecked(true);
                 clearGridData();
-                loadMoviesListIfConnectionIsAvailable(cm, MovieNetworkUtils.SortMethod.TOPRATED);
+                loadMoviesListIfConnectionIsAvailable(cm, SortMethod.TOPRATED);
                 break;
         }
 
@@ -97,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     }
 
     //todo: polish needed
-    private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm, final MovieNetworkUtils.SortMethod sortMethod) {
+    private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm, final SortMethod sortMethod) {
 
         LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);
         Button retryButton = findViewById(R.id.btn_retry);
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         });
     }
 
-    private void loadMoviesData(MovieNetworkUtils.SortMethod sortMethod) {
+    private void loadMoviesData(SortMethod sortMethod) {
         URL movieSearchUrl = MovieNetworkUtils.buildUrl(sortMethod);
         new MovieQueryTask().execute(movieSearchUrl);
     }
@@ -157,14 +161,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
                 for(int i = 0; i < movies.length(); i++) {
                     String posterPath = movies.getJSONObject(i).get("poster_path").toString();
-                    String posterUrl = "http://image.tmdb.org/t/p/w185/" + posterPath;
+                    String posterUrl = POSTER_BASE_URL + POSTER_W185 + posterPath;
 
                     String movieTitle = movies.getJSONObject(i).get("title").toString();
                     String relaseDate = movies.getJSONObject(i).get("release_date").toString();
                     String voteAverage = movies.getJSONObject(i).get("vote_average").toString();
                     String plotSynopsis = movies.getJSONObject(i).get("overview").toString();
 
-                    movieList.add(new MovieDAO(posterUrl, movieTitle, relaseDate, voteAverage, plotSynopsis));
+                    movieList.add(new MovieDAO(posterPath, movieTitle, relaseDate, voteAverage, plotSynopsis));
                 }
 
             } catch (JSONException e) {

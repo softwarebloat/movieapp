@@ -26,8 +26,9 @@ public class MovieNetworkUtils {
     private final static String API_KEY = BuildConfig.MOVIE_API_KEY;
 
 
-
-    final static String POSTER_SIZE = "w185";
+    public final static String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    public final static String POSTER_W185 = "w185";
+    public final static String POSTER = "w342";
 
     public enum SortMethod {
         DEFAULT, TOPRATED, POPULAR

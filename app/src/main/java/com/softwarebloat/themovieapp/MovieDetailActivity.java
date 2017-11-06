@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.squareup.picasso.Picasso;
 
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     @Override
@@ -30,13 +33,17 @@ public class MovieDetailActivity extends AppCompatActivity {
             MovieDAO movie = intentThatStartedThisActivity.getParcelableExtra("movie_data");
 
             mMovieTitle.setText(movie.getMovieTitle());
-            mReleaseData.setText(movie.getReleaseDate());
+            mReleaseData.setText(movie.getReleaseDate().substring(0,4));
             mVoteAverage.setText(movie.getVoteAverage());
             mPlotSynopsis.setText(movie.getPlotSynopsis());
 
+            String posterUrl = POSTER_BASE_URL + POSTER + movie.getPosterPath();
+
+            //todo: handle placeholder and error
             Picasso.with(this)
-                    .load(movie.getPosterUrl())
-                    .resize(185, 278)
+                    .load(posterUrl)
+                    .placeholder(R.drawable.not_found)
+                    .error(R.drawable.not_found)
                     .into(mPosterMovie);
         }
     }
