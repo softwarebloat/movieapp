@@ -2,7 +2,6 @@ package com.softwarebloat.themovieapp;
 
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,11 +17,6 @@ import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.SortMethod;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +26,9 @@ import static android.support.v7.widget.RecyclerView.INVISIBLE;
 import static android.support.v7.widget.RecyclerView.LayoutManager;
 import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static android.support.v7.widget.RecyclerView.VISIBLE;
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.*;
 
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener, OnTaskCompleted {
 
     private Adapter mAdapter;
     private LayoutManager mLayoutManager;
@@ -44,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     private List<MovieDAO> movieList = new ArrayList<>();
 
-    private Toast mToast;
     private ConnectivityManager cm;
 
     @Override
@@ -57,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MoviesAdapter(movieList, this);
-        mRecyclerView.setAdapter(mAdapter);
+
+
 
 
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -123,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     private void loadMoviesData(SortMethod sortMethod) {
         URL movieSearchUrl = MovieNetworkUtils.buildUrl(sortMethod);
-        new MovieQueryTask().execute(movieSearchUrl);
+        new MovieQueryTask(this).execute(movieSearchUrl);
     }
 
     @Override
@@ -136,47 +127,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         startActivity(MovieDetailActivityIntent);
     }
 
-    public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-        @Override
-        protected String doInBackground(URL... urls) {
-            URL searchUrl = urls[0];
-            String moviesSearchResults = null;
-
-            try {
-                moviesSearchResults = MovieNetworkUtils.getResponseFromHttpUrl(searchUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return moviesSearchResults;
-        }
-
-        @Override
-        protected void onPostExecute(String searchResult) {
-
-            try {
-                JSONObject result = new JSONObject(searchResult);
-                JSONArray movies = result.getJSONArray("results");
-
-                for(int i = 0; i < movies.length(); i++) {
-                    String posterPath = movies.getJSONObject(i).get("poster_path").toString();
-                    String posterUrl = POSTER_BASE_URL + POSTER_W185 + posterPath;
-
-                    String movieTitle = movies.getJSONObject(i).get("title").toString();
-                    String relaseDate = movies.getJSONObject(i).get("release_date").toString();
-                    String voteAverage = movies.getJSONObject(i).get("vote_average").toString();
-                    String plotSynopsis = movies.getJSONObject(i).get("overview").toString();
-
-                    movieList.add(new MovieDAO(posterPath, movieTitle, relaseDate, voteAverage, plotSynopsis));
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            mAdapter.notifyDataSetChanged();
-        }
+    @Override
+    public void onTaskCompleted(List<MovieDAO> movies) {
+        movieList = movies;
+        mAdapter = new MoviesAdapter(movieList, this);
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
-
 }
