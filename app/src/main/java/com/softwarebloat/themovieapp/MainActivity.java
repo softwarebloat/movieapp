@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    //todo: polish needed
     private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm, final SortMethod sortMethod) {
 
         LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);

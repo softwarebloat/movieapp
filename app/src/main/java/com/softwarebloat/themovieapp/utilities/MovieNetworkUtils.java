@@ -23,10 +23,9 @@ public class MovieNetworkUtils {
     private final static String API_KEY_QUERY_PARAM = "api_key";
     private final static String API_KEY = BuildConfig.MOVIE_API_KEY;
 
-
     public final static String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     public final static String POSTER_W185 = "w185";
-    public final static String POSTER = "w342";
+    public final static String POSTER_W342 = "w342";
 
     public enum SortMethod {
         DEFAULT, TOPRATED, POPULAR
@@ -76,7 +75,7 @@ public class MovieNetworkUtils {
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");//don't know if needed
+            scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
             if(hasInput) {

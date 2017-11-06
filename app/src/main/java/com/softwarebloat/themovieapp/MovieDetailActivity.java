@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.squareup.picasso.Picasso;
 
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -37,11 +37,12 @@ public class MovieDetailActivity extends AppCompatActivity {
             mVoteAverage.setText(movie.getVoteAverage());
             mPlotSynopsis.setText(movie.getPlotSynopsis());
 
-            String posterUrl = POSTER_BASE_URL + POSTER + movie.getPosterPath();
+            String posterUrl = POSTER_BASE_URL + POSTER_W342 + movie.getPosterPath();
 
-            //todo: handle placeholder and error
             Picasso.with(this)
                     .load(posterUrl)
+                    .placeholder(R.mipmap.ic_placeholder_icon)
+                    .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
         }
     }

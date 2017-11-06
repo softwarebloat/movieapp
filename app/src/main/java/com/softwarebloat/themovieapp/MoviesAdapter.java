@@ -75,10 +75,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         String posterUrl = POSTER_BASE_URL + POSTER_W185 + movies.get(position).getPosterPath();
         Context context = holder.listItem.getContext();
 
-        //todo: handle placeholder and error
         Picasso.with(context)
                 .load(posterUrl)
-
+                .placeholder(R.mipmap.ic_placeholder_icon)
+                .error(R.mipmap.ic_placeholder_icon)
                 .into(holder.listItem);
     }
 
