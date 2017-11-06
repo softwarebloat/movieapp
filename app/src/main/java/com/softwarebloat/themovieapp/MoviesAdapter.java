@@ -33,7 +33,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
 
-        ImageView listItem;
+        final ImageView listItem;
 
         public MoviesAdapterViewHolder(View itemView) {
             super(itemView);
@@ -64,9 +64,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         LayoutInflater inflater = LayoutInflater.from(context);
 
         int layoutIdForListItem = R.layout.movie_list_item;
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
 
         return new MoviesAdapterViewHolder(view);
     }
@@ -79,8 +78,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         //todo: handle placeholder and error
         Picasso.with(context)
                 .load(posterUrl)
-                .placeholder(R.drawable.not_found)
-                .error(R.drawable.not_found)
+
                 .into(holder.listItem);
     }
 

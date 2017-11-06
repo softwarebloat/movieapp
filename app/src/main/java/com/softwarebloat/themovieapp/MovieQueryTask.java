@@ -1,7 +1,6 @@
 package com.softwarebloat.themovieapp;
 
 import android.os.AsyncTask;
-import static android.support.v7.widget.RecyclerView.Adapter;
 
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
@@ -16,9 +15,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieQueryTask extends AsyncTask<URL, Void, String> {
+class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-    private OnTaskCompleted listener;
+    private final OnTaskCompleted listener;
 
     MovieQueryTask(OnTaskCompleted listener) {
         this.listener = listener;
@@ -51,11 +50,11 @@ public class MovieQueryTask extends AsyncTask<URL, Void, String> {
                 String posterPath = movies.getJSONObject(i).get("poster_path").toString();
 
                 String movieTitle = movies.getJSONObject(i).get("title").toString();
-                String relaseDate = movies.getJSONObject(i).get("release_date").toString();
+                String releaseDate = movies.getJSONObject(i).get("release_date").toString();
                 String voteAverage = movies.getJSONObject(i).get("vote_average").toString();
                 String plotSynopsis = movies.getJSONObject(i).get("overview").toString();
 
-                movieList.add(new MovieDAO(posterPath, movieTitle, relaseDate, voteAverage, plotSynopsis));
+                movieList.add(new MovieDAO(posterPath, movieTitle, releaseDate, voteAverage, plotSynopsis));
             }
 
         } catch (JSONException e) {

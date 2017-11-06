@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 public class MovieDAO implements Parcelable {
 
-    private String posterPath;
-    private String movieTitle;
-    private String releaseDate;
-    private String voteAverage;
-    private String plotSynopsis;
+    private final String posterPath;
+    private final String movieTitle;
+    private final String releaseDate;
+    private final String voteAverage;
+    private final String plotSynopsis;
 
     public MovieDAO(String posterPath, String movieTitle, String releaseDate, String voteAverage,
                     String plotSynopsis) {
@@ -20,7 +20,7 @@ public class MovieDAO implements Parcelable {
         this.plotSynopsis = plotSynopsis;
     }
 
-    public MovieDAO(Parcel in) {
+    private MovieDAO(Parcel in) {
 
         String[] data = new String[5];
 
@@ -37,40 +37,20 @@ public class MovieDAO implements Parcelable {
         return posterPath;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
-
     public String getMovieTitle() {
         return movieTitle;
-    }
-
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
     }
 
     public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public String getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(String voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
     public String getPlotSynopsis() {
         return plotSynopsis;
-    }
-
-    public void setPlotSynopsis(String plotSynopsis) {
-        this.plotSynopsis = plotSynopsis;
     }
 
     @Override

@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
@@ -31,7 +30,6 @@ import static android.support.v7.widget.RecyclerView.VISIBLE;
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener, OnTaskCompleted {
 
     private Adapter mAdapter;
-    private LayoutManager mLayoutManager;
     private RecyclerView mRecyclerView;
 
     private List<MovieDAO> movieList = new ArrayList<>();
@@ -45,12 +43,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        LayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-
-
-
 
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         loadMoviesListIfConnectionIsAvailable(cm, SortMethod.DEFAULT);
@@ -133,6 +127,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         movieList = movies;
         mAdapter = new MoviesAdapter(movieList, this);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
     }
 }

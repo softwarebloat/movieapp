@@ -1,8 +1,6 @@
 package com.softwarebloat.themovieapp.utilities;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -19,7 +17,7 @@ import java.util.Scanner;
 public class MovieNetworkUtils {
 
     private final static String TMDB_BASE_URL = "http://api.themoviedb.org/3/";
-    final static String POPULAR_ENDPOINT = "movie/popular";
+    private final static String POPULAR_ENDPOINT = "movie/popular";
     private final static String TOPRATED_ENDPOINT = "movie/top_rated";
 
     private final static String API_KEY_QUERY_PARAM = "api_key";

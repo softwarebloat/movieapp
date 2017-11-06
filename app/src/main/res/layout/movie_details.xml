@@ -44,7 +44,6 @@
                     android:textSize="26sp"/>
 
                 <TextView
-                    android:id="@+id/tv_out_of_ten"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/out_of_ten"

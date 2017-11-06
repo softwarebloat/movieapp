@@ -42,8 +42,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             //todo: handle placeholder and error
             Picasso.with(this)
                     .load(posterUrl)
-                    .placeholder(R.drawable.not_found)
-                    .error(R.drawable.not_found)
                     .into(mPosterMovie);
         }
     }
