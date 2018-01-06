@@ -23,6 +23,11 @@
         </activity>
 
         <activity android:name=".MovieDetailActivity"/>
+
+        <provider
+            android:authorities="com.softwarebloat.themovieapp"
+            android:name=".data.MovieProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
