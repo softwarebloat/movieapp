@@ -105,5 +105,17 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_overview"
             tools:text="i'm the movie synopsis!"/>
 
+        <ImageButton
+            android:id="@+id/btn_favorite_movie"
+            android:layout_width="31dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:selectableItemBackground"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
+            app:layout_constraintTop_toBottomOf="@+id/tv_release_data"
+            app:srcCompat="@android:drawable/btn_star"
+            android:onClick="addMovieToFavorites"/>
+
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

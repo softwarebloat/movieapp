@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.squareup.picasso.Picasso;
@@ -26,6 +29,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView mVoteAverage = findViewById(R.id.tv_vote_average);
         TextView mPlotSynopsis = findViewById(R.id.tv_plot_synopsis);
         ImageView mPosterMovie = findViewById(R.id.iv_poster_movie);
+        ImageButton mFavoriteMovie = findViewById(R.id.btn_favorite_movie);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -45,5 +49,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
         }
+    }
+
+    public void addMovieToFavorites(View view) {
+        Toast.makeText(this, "Added to favorite!", Toast.LENGTH_SHORT).show();
     }
 }
