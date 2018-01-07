@@ -117,5 +117,16 @@
             app:srcCompat="@android:drawable/btn_star"
             android:onClick="addMovieToFavorites"/>
 
+        <ImageButton
+            android:id="@+id/play_movie_trailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
+            app:layout_constraintTop_toBottomOf="@+id/btn_favorite_movie"
+            app:srcCompat="@android:drawable/ic_media_play"
+            android:onClick="playMovieTrailer"/>
+
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

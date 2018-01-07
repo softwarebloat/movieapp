@@ -2,6 +2,7 @@ package com.softwarebloat.themovieapp;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W
 public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted {
 
     MovieDAO movie;
+    String mTrailerUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +40,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         TextView mVoteAverage = findViewById(R.id.tv_vote_average);
         TextView mPlotSynopsis = findViewById(R.id.tv_plot_synopsis);
         ImageView mPosterMovie = findViewById(R.id.iv_poster_movie);
-        ImageButton mFavoriteMovie = findViewById(R.id.btn_favorite_movie);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -71,10 +72,15 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         Toast.makeText(this, "Added to favorite!", Toast.LENGTH_SHORT).show();
     }
 
+    public void playMovieTrailer(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTrailerUrl));
+        startActivity(intent);
+    }
+
     @Override
     public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
         String trailerId = trailers.get(0).getTrailerId();
-        Toast.makeText(this, trailerId, Toast.LENGTH_SHORT).show();
+        mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailerId);
     }
 
 

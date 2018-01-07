@@ -21,6 +21,7 @@ public class MovieNetworkUtils {
     private final static String POPULAR_ENDPOINT = MOVIE + "/popular";
     private final static String TOPRATED_ENDPOINT = MOVIE + "/top_rated";
     private final static String VIDEO_TRAILER_ENDPOINT = "/videos";
+    private final static String YOUTUBE_PATH = "https://youtube.com/watch?v=";
 
     private final static String API_KEY_QUERY_PARAM = "api_key";
     private final static String API_KEY = BuildConfig.MOVIE_API_KEY;
@@ -57,6 +58,10 @@ public class MovieNetworkUtils {
         }
 
         return url;
+    }
+
+    public static String buildYoutubeTrailerUrl(String trailerId) {
+        return YOUTUBE_PATH + trailerId;
     }
 
     public static URL buildUrl(SortMethod sortMethod) {
