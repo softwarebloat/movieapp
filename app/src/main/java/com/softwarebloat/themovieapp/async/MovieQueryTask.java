@@ -1,4 +1,4 @@
-package com.softwarebloat.themovieapp;
+package com.softwarebloat.themovieapp.async;
 
 import android.os.AsyncTask;
 
@@ -15,11 +15,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-class MovieQueryTask extends AsyncTask<URL, Void, String> {
+public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-    private final OnTaskCompleted listener;
+    private final OnMovieTaskCompleted listener;
 
-    MovieQueryTask(OnTaskCompleted listener) {
+    public MovieQueryTask(OnMovieTaskCompleted listener) {
         this.listener = listener;
     }
 

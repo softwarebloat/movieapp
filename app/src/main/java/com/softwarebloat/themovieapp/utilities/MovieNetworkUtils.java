@@ -17,8 +17,10 @@ import java.util.Scanner;
 public class MovieNetworkUtils {
 
     private final static String TMDB_BASE_URL = "http://api.themoviedb.org/3/";
-    private final static String POPULAR_ENDPOINT = "movie/popular";
-    private final static String TOPRATED_ENDPOINT = "movie/top_rated";
+    private final static String MOVIE = "movie";
+    private final static String POPULAR_ENDPOINT = MOVIE + "/popular";
+    private final static String TOPRATED_ENDPOINT = MOVIE + "/top_rated";
+    private final static String VIDEO_TRAILER_ENDPOINT = "/videos";
 
     private final static String API_KEY_QUERY_PARAM = "api_key";
     private final static String API_KEY = BuildConfig.MOVIE_API_KEY;
@@ -38,6 +40,23 @@ public class MovieNetworkUtils {
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnected();
+    }
+
+    public static URL buildMovieTrailerEndpoint(String movieId) {
+
+        Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
+                .appendEncodedPath(MOVIE + "/" + movieId + VIDEO_TRAILER_ENDPOINT)
+                .appendQueryParameter(API_KEY_QUERY_PARAM, API_KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
     }
 
     public static URL buildUrl(SortMethod sortMethod) {

@@ -1,9 +1,9 @@
-package com.softwarebloat.themovieapp;
+package com.softwarebloat.themovieapp.async;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 
 import java.util.List;
 
-interface OnTaskCompleted {
+public interface OnMovieTaskCompleted {
     void onTaskCompleted(List<MovieDAO> movies);
 }

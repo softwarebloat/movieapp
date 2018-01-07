@@ -12,12 +12,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
+import com.softwarebloat.themovieapp.DAO.TrailerDAO;
+import com.softwarebloat.themovieapp.async.MovieTrailerQueryTask;
+import com.softwarebloat.themovieapp.async.OnTrailerTaskCompleted;
+import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
+import java.net.URL;
+import java.util.List;
 
-public class MovieDetailActivity extends AppCompatActivity {
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
+
+public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted {
+
+    MovieDAO movie;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,11 +42,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intentThatStartedThisActivity = getIntent();
 
-        if(intentThatStartedThisActivity.hasExtra("movie_data")) {
-            MovieDAO movie = intentThatStartedThisActivity.getParcelableExtra("movie_data");
+        if (intentThatStartedThisActivity.hasExtra("movie_data")) {
+            movie = intentThatStartedThisActivity.getParcelableExtra("movie_data");
 
             mMovieTitle.setText(movie.getMovieTitle());
-            mReleaseData.setText(movie.getReleaseDate().substring(0,4));
+            mReleaseData.setText(movie.getReleaseDate().substring(0, 4));
             mVoteAverage.setText(movie.getVoteAverage());
             mPlotSynopsis.setText(movie.getPlotSynopsis());
 
@@ -48,10 +57,26 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .placeholder(R.mipmap.ic_placeholder_icon)
                     .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
+
+            loadMovieTrailer(movie.getMovieId());
         }
+    }
+
+    private void loadMovieTrailer(String movieId) {
+        URL movieTrailerUrl = MovieNetworkUtils.buildMovieTrailerEndpoint(movieId);
+        new MovieTrailerQueryTask(this).execute(movieTrailerUrl);
     }
 
     public void addMovieToFavorites(View view) {
         Toast.makeText(this, "Added to favorite!", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
+        String trailerId = trailers.get(0).getTrailerId();
+        Toast.makeText(this, trailerId, Toast.LENGTH_SHORT).show();
+    }
+
+
+
 }

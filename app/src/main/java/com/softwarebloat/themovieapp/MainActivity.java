@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
+import com.softwarebloat.themovieapp.async.MovieQueryTask;
+import com.softwarebloat.themovieapp.async.OnMovieTaskCompleted;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.SortMethod;
 
@@ -27,7 +29,7 @@ import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static android.support.v7.widget.RecyclerView.VISIBLE;
 
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener, OnTaskCompleted {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener, OnMovieTaskCompleted {
 
     private Adapter mAdapter;
     private RecyclerView mRecyclerView;
