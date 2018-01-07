@@ -64,15 +64,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         int itemClickedId = item.getItemId();
 
         switch (itemClickedId) {
-            case R.id.action_sort_popular :
+            case R.id.action_sort_popular:
                 item.setChecked(true);
                 clearGridData();
                 loadMoviesListIfConnectionIsAvailable(cm, SortMethod.POPULAR);
                 break;
-            case R.id.action_sort_toprated :
+            case R.id.action_sort_toprated:
                 item.setChecked(true);
                 clearGridData();
                 loadMoviesListIfConnectionIsAvailable(cm, SortMethod.TOPRATED);
+                break;
+            case R.id.action_sort_favorites:
+                item.setChecked(true);
+                clearGridData();
+                //TODO load data from cursor
                 break;
         }
 
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);
         Button retryButton = findViewById(R.id.btn_retry);
 
-        if(MovieNetworkUtils.isDeviceOnline(cm)) {
+        if (MovieNetworkUtils.isDeviceOnline(cm)) {
             noConnectionItems.setVisibility(INVISIBLE);
             loadMoviesData(sortMethod);
         } else {
