@@ -45,14 +45,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
             int item = getAdapterPosition();
 
+            String movieId = movies.get(item).getMovieId();
             String posterUrl = movies.get(item).getPosterPath();
-
             String movieTitle = movies.get(item).getMovieTitle();
             String releaseDate = movies.get(item).getReleaseDate();
             String voteAverage = movies.get(item).getVoteAverage();
             String plotSynopsis = movies.get(item).getPlotSynopsis();
 
-            MovieDAO movie = new MovieDAO(posterUrl, movieTitle, releaseDate, voteAverage, plotSynopsis);
+            MovieDAO movie = new MovieDAO(movieId, posterUrl, movieTitle, releaseDate, voteAverage, plotSynopsis);
             mOnClickListener.onListItemClick(movie);
         }
 
