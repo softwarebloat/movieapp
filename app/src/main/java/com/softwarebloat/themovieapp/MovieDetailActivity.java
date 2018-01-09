@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.VIDEO_TRAILER_ENDPOINT;
 
 public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted {
 
@@ -64,7 +64,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     }
 
     private void loadMovieTrailer(String movieId) {
-        URL movieTrailerUrl = MovieNetworkUtils.buildMovieTrailerEndpoint(movieId);
+        URL movieTrailerUrl = MovieNetworkUtils
+                .buildMovieAdditionalInfoEndpointUrl(movieId, VIDEO_TRAILER_ENDPOINT);
         new MovieTrailerQueryTask(this).execute(movieTrailerUrl);
     }
 
@@ -82,7 +83,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         String trailerId = trailers.get(0).getTrailerId();
         mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailerId);
     }
-
 
 
 }

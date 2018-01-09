@@ -20,7 +20,7 @@ public class MovieNetworkUtils {
     private final static String MOVIE = "movie";
     private final static String POPULAR_ENDPOINT = MOVIE + "/popular";
     private final static String TOPRATED_ENDPOINT = MOVIE + "/top_rated";
-    private final static String VIDEO_TRAILER_ENDPOINT = "/videos";
+
     private final static String YOUTUBE_PATH = "https://youtube.com/watch?v=";
 
     private final static String API_KEY_QUERY_PARAM = "api_key";
@@ -29,6 +29,10 @@ public class MovieNetworkUtils {
     public final static String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     public final static String POSTER_W185 = "w185";
     public final static String POSTER_W342 = "w342";
+
+    public final static String VIDEO_TRAILER_ENDPOINT = "/videos";
+    public final static String REVIEW_ENDPOINT = "/reviews";
+
 
     public enum SortMethod {
         DEFAULT, TOPRATED, POPULAR
@@ -43,10 +47,10 @@ public class MovieNetworkUtils {
         return netInfo != null && netInfo.isConnected();
     }
 
-    public static URL buildMovieTrailerEndpoint(String movieId) {
+    public static URL buildMovieAdditionalInfoEndpointUrl(String movieId, String endpoint) {
 
         Uri builtUri = Uri.parse(TMDB_BASE_URL).buildUpon()
-                .appendEncodedPath(MOVIE + "/" + movieId + VIDEO_TRAILER_ENDPOINT)
+                .appendEncodedPath(MOVIE + "/" + movieId + endpoint)
                 .appendQueryParameter(API_KEY_QUERY_PARAM, API_KEY)
                 .build();
 
