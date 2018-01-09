@@ -12,8 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
+import com.softwarebloat.themovieapp.DAO.ReviewDAO;
 import com.softwarebloat.themovieapp.DAO.TrailerDAO;
+import com.softwarebloat.themovieapp.async.MovieReviewQueryTask;
 import com.softwarebloat.themovieapp.async.MovieTrailerQueryTask;
+import com.softwarebloat.themovieapp.async.OnReviewTaskCompleted;
 import com.softwarebloat.themovieapp.async.OnTrailerTaskCompleted;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -23,9 +26,10 @@ import java.util.List;
 
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.REVIEW_ENDPOINT;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.VIDEO_TRAILER_ENDPOINT;
 
-public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted {
+public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted, OnReviewTaskCompleted {
 
     MovieDAO movie;
     String mTrailerUrl;
@@ -45,6 +49,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
 
         if (intentThatStartedThisActivity.hasExtra("movie_data")) {
             movie = intentThatStartedThisActivity.getParcelableExtra("movie_data");
+            String movieId = movie.getMovieId();
 
             mMovieTitle.setText(movie.getMovieTitle());
             mReleaseData.setText(movie.getReleaseDate().substring(0, 4));
@@ -59,8 +64,15 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                     .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
 
-            loadMovieTrailer(movie.getMovieId());
+            loadMovieTrailer(movieId);
+            loadMovieReviews(movieId);
         }
+    }
+
+    private void loadMovieReviews(String movieId) {
+        URL movieReviewUrl = MovieNetworkUtils
+                .buildMovieAdditionalInfoEndpointUrl(movieId, REVIEW_ENDPOINT);
+        new MovieReviewQueryTask(this).execute(movieReviewUrl);
     }
 
     private void loadMovieTrailer(String movieId) {
@@ -85,4 +97,9 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     }
 
 
+    @Override
+    public void onReviewTaskCompleted(List<ReviewDAO> reviews) {
+        String author = reviews.get(0).getAuthor();
+        Toast.makeText(this, author, Toast.LENGTH_SHORT).show();
+    }
 }
