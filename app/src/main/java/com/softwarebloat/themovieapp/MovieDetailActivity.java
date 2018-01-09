@@ -92,14 +92,20 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
 
     @Override
     public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
-        String trailerId = trailers.get(0).getTrailerId();
-        mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailerId);
+
+        if (trailers.size() > 0) {
+            String trailerId = trailers.get(0).getTrailerId();
+            mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailerId);
+        }
     }
 
 
     @Override
     public void onReviewTaskCompleted(List<ReviewDAO> reviews) {
-        String author = reviews.get(0).getAuthor();
-        Toast.makeText(this, author, Toast.LENGTH_SHORT).show();
+
+        if (reviews.size() > 0) {
+            String author = reviews.get(0).getAuthor();
+            Toast.makeText(this, author, Toast.LENGTH_SHORT).show();
+        }
     }
 }
