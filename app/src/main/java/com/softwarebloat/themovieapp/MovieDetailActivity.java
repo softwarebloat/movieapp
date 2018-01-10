@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.*;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.REVIEW_ENDPOINT;
@@ -31,13 +34,19 @@ import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.VIDEO_TR
 
 public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted, OnReviewTaskCompleted {
 
-    MovieDAO movie;
-    String mTrailerUrl;
+    private MovieDAO movie;
+    private String mTrailerUrl;
+    private RecyclerView mReviewsRecyclerViews;
+    private Adapter mReviewsAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_details);
+
+        mReviewsRecyclerViews = findViewById(R.id.rv_reviews);
+        mReviewsRecyclerViews.setLayoutManager(new LinearLayoutManager(this));
+
 
         TextView mMovieTitle = findViewById(R.id.tv_movie_title);
         TextView mReleaseData = findViewById(R.id.tv_release_data);
@@ -104,8 +113,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     public void onReviewTaskCompleted(List<ReviewDAO> reviews) {
 
         if (reviews.size() > 0) {
-            String author = reviews.get(0).getAuthor();
-            Toast.makeText(this, author, Toast.LENGTH_SHORT).show();
+            mReviewsAdapter = new ReviewsAdapter(reviews);
+            mReviewsRecyclerViews.setAdapter(mReviewsAdapter);
         }
     }
 }
