@@ -47,8 +47,9 @@ public class MovieTrailerQueryTask extends AsyncTask<URL, Void, String> {
 
             for (int i = 0; i < trailers.length(); i++) {
                 String trailerId = trailers.getJSONObject(i).get("key").toString();
+                String type = trailers.getJSONObject(i).get("type").toString();
 
-                trailerList.add(new TrailerDAO(trailerId));
+                trailerList.add(new TrailerDAO(trailerId, type));
             }
 
 

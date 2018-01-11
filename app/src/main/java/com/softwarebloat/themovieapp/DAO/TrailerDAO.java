@@ -6,17 +6,24 @@ import android.os.Parcelable;
 public class TrailerDAO implements Parcelable {
 
     private final String trailerId;
+    private final String type;
 
-    public TrailerDAO(String trailerId) {
+    public TrailerDAO(String trailerId, String type) {
         this.trailerId = trailerId;
+        this.type = type;
     }
 
     public String getTrailerId() {
         return trailerId;
     }
 
+    public String getType() {
+        return type;
+    }
+
     private TrailerDAO(Parcel in) {
         trailerId = in.readString();
+        type = in.readString();
     }
 
     public static final Creator<TrailerDAO> CREATOR = new Creator<TrailerDAO>() {
@@ -39,5 +46,6 @@ public class TrailerDAO implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(trailerId);
+        dest.writeString(type);
     }
 }

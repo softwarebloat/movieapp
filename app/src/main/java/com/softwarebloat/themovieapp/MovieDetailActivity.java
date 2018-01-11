@@ -30,6 +30,7 @@ import static android.support.v7.widget.RecyclerView.*;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.REVIEW_ENDPOINT;
+import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.TRAILER_KEY;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.VIDEO_TRAILER_ENDPOINT;
 
 public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted, OnReviewTaskCompleted {
@@ -102,9 +103,11 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     @Override
     public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
 
-        if (trailers.size() > 0) {
-            String trailerId = trailers.get(0).getTrailerId();
-            mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailerId);
+        //TODO: find better way to filter trailer from list
+        for (TrailerDAO trailer : trailers) {
+            if(trailer.getType().equals(TRAILER_KEY)) {
+                mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailer.getTrailerId());
+            }
         }
     }
 

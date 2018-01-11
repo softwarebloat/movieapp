@@ -31,6 +31,7 @@ public class MovieNetworkUtils {
     public final static String POSTER_W342 = "w342";
 
     public final static String VIDEO_TRAILER_ENDPOINT = "/videos";
+    public final static String TRAILER_KEY = "Trailer";
     public final static String REVIEW_ENDPOINT = "/reviews";
 
 
