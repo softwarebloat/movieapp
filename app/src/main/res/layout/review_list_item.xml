@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
              android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/tv_review_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         tools:text="Tizio"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_review_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Commento sul film"/>
+
+</LinearLayout>
