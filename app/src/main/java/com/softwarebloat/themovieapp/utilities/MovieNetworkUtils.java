@@ -35,7 +35,7 @@ public class MovieNetworkUtils {
 
 
     public enum SortMethod {
-        DEFAULT, TOPRATED, POPULAR
+        DEFAULT, TOPRATED, POPULAR, FAVORITES
     }
 
 

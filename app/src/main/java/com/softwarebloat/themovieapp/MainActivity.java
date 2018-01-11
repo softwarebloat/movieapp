@@ -38,25 +38,53 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     private ConnectivityManager cm;
 
+    private static final String SELECTED_SORT_METHOD = "SORT_METHOD";
+    private int sortMethodSelected = SortMethod.DEFAULT.ordinal();
+
+    private static final String SELECTED_MENU = "SELECTED_MENU";
+    private int menuOptionSelectedId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState != null) {
+            menuOptionSelectedId = savedInstanceState.getInt(SELECTED_MENU);
+            sortMethodSelected = savedInstanceState.getInt(SELECTED_SORT_METHOD);
+        }
+
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
 
         LayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        loadMoviesListIfConnectionIsAvailable(cm, SortMethod.DEFAULT);
 
+        cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (SortMethod.values()[sortMethodSelected] != SortMethod.FAVORITES) {
+            loadMoviesListIfConnectionIsAvailable(cm, SortMethod.values()[sortMethodSelected]);
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_MENU, menuOptionSelectedId);
+        outState.putInt(SELECTED_SORT_METHOD, sortMethodSelected);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        menu.getItem(0).setChecked(true);
+
+        if (menuOptionSelectedId == -1) {
+            menu.getItem(0).setChecked(true);
+            return true;
+        }
+
+        menu.findItem(menuOptionSelectedId).setChecked(true);
 
         return true;
     }
@@ -68,16 +96,22 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         switch (itemClickedId) {
             case R.id.action_sort_popular:
                 item.setChecked(true);
+                menuOptionSelectedId = itemClickedId;
+                sortMethodSelected = SortMethod.POPULAR.ordinal();
                 clearGridData();
                 loadMoviesListIfConnectionIsAvailable(cm, SortMethod.POPULAR);
                 break;
             case R.id.action_sort_toprated:
                 item.setChecked(true);
+                menuOptionSelectedId = itemClickedId;
+                sortMethodSelected = SortMethod.TOPRATED.ordinal();
                 clearGridData();
                 loadMoviesListIfConnectionIsAvailable(cm, SortMethod.TOPRATED);
                 break;
             case R.id.action_sort_favorites:
                 item.setChecked(true);
+                menuOptionSelectedId = itemClickedId;
+                sortMethodSelected = SortMethod.FAVORITES.ordinal();
                 clearGridData();
                 //TODO load data from cursor
                 break;
