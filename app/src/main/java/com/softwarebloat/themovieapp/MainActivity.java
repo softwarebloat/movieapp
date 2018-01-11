@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
 
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        if (SortMethod.values()[sortMethodSelected] != SortMethod.FAVORITES) {
+        if (!isFavoritesSelected()) {
             loadMoviesListIfConnectionIsAvailable(cm, SortMethod.values()[sortMethodSelected]);
         }
 
@@ -120,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean isFavoritesSelected() {
+        return SortMethod.values()[sortMethodSelected] == SortMethod.FAVORITES;
+    }
+
     private void clearGridData() {
         movieList.clear();
         mAdapter = new MoviesAdapter(movieList, this);
@@ -133,7 +137,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
         if (MovieNetworkUtils.isDeviceOnline(cm)) {
             noConnectionItems.setVisibility(INVISIBLE);
-            loadMoviesData(sortMethod);
+            if (!isFavoritesSelected()) {
+                loadMoviesData(sortMethod);
+            }
         } else {
             noConnectionItems.setVisibility(VISIBLE);
         }
