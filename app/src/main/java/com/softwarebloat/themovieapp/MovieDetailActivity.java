@@ -1,7 +1,9 @@
 package com.softwarebloat.themovieapp;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +23,8 @@ import com.softwarebloat.themovieapp.async.MovieReviewQueryTask;
 import com.softwarebloat.themovieapp.async.MovieTrailerQueryTask;
 import com.softwarebloat.themovieapp.async.OnReviewTaskCompleted;
 import com.softwarebloat.themovieapp.async.OnTrailerTaskCompleted;
+import com.softwarebloat.themovieapp.data.MovieContract;
+import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -40,6 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     private RecyclerView mReviewsRecyclerViews;
     private Adapter mReviewsAdapter;
 
+    TextView mMovieTitle;
+    ImageButton mBtnFavorite;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +57,12 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         mReviewsRecyclerViews.setLayoutManager(new LinearLayoutManager(this));
 
 
-        TextView mMovieTitle = findViewById(R.id.tv_movie_title);
+        mMovieTitle = findViewById(R.id.tv_movie_title);
         TextView mReleaseData = findViewById(R.id.tv_release_data);
         TextView mVoteAverage = findViewById(R.id.tv_vote_average);
         TextView mPlotSynopsis = findViewById(R.id.tv_plot_synopsis);
         ImageView mPosterMovie = findViewById(R.id.iv_poster_movie);
+        mBtnFavorite = findViewById(R.id.btn_favorite_movie);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -74,6 +83,23 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                     .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
 
+            if(movieIsAlreadyInFavorites()) {
+                setFavoriteChecked();
+            } else {
+                setFavoriteNotChecked();
+            }
+
+            mBtnFavorite.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(movieIsAlreadyInFavorites()) {
+                        removeMovieFromFavorites();
+                    } else {
+                        addMovieToFavorites();
+                    }
+                }
+            });
+
             loadMovieTrailer(movieId);
             loadMovieReviews(movieId);
         }
@@ -91,8 +117,65 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         new MovieTrailerQueryTask(this).execute(movieTrailerUrl);
     }
 
-    public void addMovieToFavorites(View view) {
-        Toast.makeText(this, "Added to favorite!", Toast.LENGTH_SHORT).show();
+    private boolean movieIsAlreadyInFavorites() {
+
+        String[] projection = {MovieEntry.MOVIE_ID};
+        String where = MovieEntry.MOVIE_ID + " LIKE ?";
+        String[] selectionArgs = {movie.getMovieId()};
+
+        Cursor query = getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                projection,
+                where,
+                selectionArgs,
+                null
+        );
+
+        return query != null && query.getCount() > 0;
+
+    }
+
+    private void addMovieToFavorites() {
+
+        ContentValues values = new ContentValues();
+        values.put(MovieEntry.MOVIE_ID, movie.getMovieId());
+        values.put(MovieEntry.COLUMN_MOVIE_TITLE, movie.getMovieTitle());
+        values.put(MovieEntry.COlUMN_POSTER_PATH, movie.getPosterPath());
+        values.put(MovieEntry.COlUMN_RELEASE_DATE, movie.getReleaseDate());
+        values.put(MovieEntry.COlUMN_VOTE_AVERAGE, movie.getVoteAverage());
+        values.put(MovieEntry.COlUMN_OVERVIEW, movie.getPlotSynopsis());
+
+
+        getContentResolver().insert(
+                MovieEntry.CONTENT_URI,
+                values
+        );
+
+        Toast.makeText(this, mMovieTitle.getText().toString() + " added to favorite!", Toast.LENGTH_SHORT).show();
+        setFavoriteChecked();
+    }
+
+    private void removeMovieFromFavorites() {
+
+        String where = MovieEntry.MOVIE_ID + " LIKE ?";
+        String[] selectionArgs = {movie.getMovieId()};
+
+        int rowsDeleted = getContentResolver().delete(
+                MovieEntry.CONTENT_URI,
+                where,
+                selectionArgs
+        );
+
+        setFavoriteNotChecked();
+
+    }
+
+    private void setFavoriteChecked() {
+        mBtnFavorite.setImageDrawable(getDrawable(android.R.drawable.btn_star_big_on));
+    }
+
+    private void setFavoriteNotChecked() {
+        mBtnFavorite.setImageDrawable(getDrawable(android.R.drawable.btn_star_big_off));
     }
 
     public void playMovieTrailer(View view) {

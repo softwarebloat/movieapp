@@ -11,12 +11,18 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
 
     private static final String DATABASE_NAME = "favorites_movies.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String SQL_CREATE_FAVORITES_MOVIES_TABLE =
             "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                     MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    MovieEntry.COLUMN_MOVIE_TITLE + " TEXT";
+                    MovieEntry.MOVIE_ID + " TEXT UNIQUE," +
+                    MovieEntry.COLUMN_MOVIE_TITLE + " TEXT," +
+                    MovieEntry.COlUMN_POSTER_PATH + " TEXT," +
+                    MovieEntry.COlUMN_RELEASE_DATE + " TEXT," +
+                    MovieEntry.COlUMN_VOTE_AVERAGE + " TEXT," +
+                    MovieEntry.COlUMN_OVERVIEW + " TEXT"
+                    + ");";
 
     private static final String SQL_DELETE_FAVORITES_MOVIES =
             "DROP TABLE IF EXISTS " + MovieEntry.TABLE_NAME;

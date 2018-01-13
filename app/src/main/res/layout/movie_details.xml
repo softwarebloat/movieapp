@@ -114,8 +114,7 @@
             android:background="?android:selectableItemBackground"
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/tv_release_data"
-            app:srcCompat="@android:drawable/btn_star"
-            android:onClick="addMovieToFavorites"/>
+            app:srcCompat="@android:drawable/btn_star" />
 
         <ImageButton
             android:id="@+id/play_movie_trailer"

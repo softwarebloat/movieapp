@@ -1,6 +1,7 @@
 package com.softwarebloat.themovieapp;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.async.MovieQueryTask;
 import com.softwarebloat.themovieapp.async.OnMovieTaskCompleted;
+import com.softwarebloat.themovieapp.data.MovieContract;
+import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.SortMethod;
 
@@ -64,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (!isFavoritesSelected()) {
             loadMoviesListIfConnectionIsAvailable(cm, SortMethod.values()[sortMethodSelected]);
+        } else {
+            //TODO: if i get back from detail activity after remove a movie from favorite, the favorites list is not refreshed and still contain that movie
+            loadFavoriteMovies();
+            //TODO: remove "retry" button if there is no connection
         }
 
     }
@@ -113,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                 menuOptionSelectedId = itemClickedId;
                 sortMethodSelected = SortMethod.FAVORITES.ordinal();
                 clearGridData();
-                //TODO load data from cursor
+                loadFavoriteMovies();
                 break;
         }
 
@@ -155,6 +163,54 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     private void loadMoviesData(SortMethod sortMethod) {
         URL movieSearchUrl = MovieNetworkUtils.buildUrl(sortMethod);
         new MovieQueryTask(this).execute(movieSearchUrl);
+    }
+
+    private void loadFavoriteMovies() {
+
+        String[] projection = {
+                MovieEntry.MOVIE_ID,
+                MovieEntry.COLUMN_MOVIE_TITLE,
+                MovieEntry.COlUMN_POSTER_PATH,
+                MovieEntry.COlUMN_RELEASE_DATE,
+                MovieEntry.COlUMN_VOTE_AVERAGE,
+                MovieEntry.COlUMN_OVERVIEW
+        };
+
+        Cursor query = getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+        );
+
+        List<MovieDAO> movies = new ArrayList<>();
+        if (query != null) {
+
+            int movieIdIndex = query.getColumnIndex(MovieEntry.MOVIE_ID);
+            int movieTitleIndex = query.getColumnIndex(MovieEntry.COLUMN_MOVIE_TITLE);
+            int moviePosterIndex = query.getColumnIndex(MovieEntry.COlUMN_POSTER_PATH);
+            int movieReleaseIndex = query.getColumnIndex(MovieEntry.COlUMN_RELEASE_DATE);
+            int movieVoteIndex = query.getColumnIndex(MovieEntry.COlUMN_VOTE_AVERAGE);
+            int movieOverviewIndex = query.getColumnIndex(MovieEntry.COlUMN_OVERVIEW);
+
+            while (query.moveToNext()) {
+                MovieDAO movie = new MovieDAO(
+                        query.getString(movieIdIndex),
+                        query.getString(moviePosterIndex),
+                        query.getString(movieTitleIndex),
+                        query.getString(movieReleaseIndex),
+                        query.getString(movieVoteIndex),
+                        query.getString(movieOverviewIndex));
+
+                movies.add(movie);
+            }
+        }
+        query.close();
+
+        mRecyclerView.setAdapter(new MoviesAdapter(movies, this));
+
+        Toast.makeText(this, String.valueOf(query.getCount()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
