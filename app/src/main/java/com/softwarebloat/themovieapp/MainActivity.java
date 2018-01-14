@@ -12,12 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.softwarebloat.themovieapp.DAO.MovieDAO;
 import com.softwarebloat.themovieapp.async.MovieQueryTask;
 import com.softwarebloat.themovieapp.async.OnMovieTaskCompleted;
-import com.softwarebloat.themovieapp.data.MovieContract;
 import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.SortMethod;
@@ -37,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     private Adapter mAdapter;
     private RecyclerView mRecyclerView;
+    private LinearLayout mNoConnectionItems;
 
     private List<MovieDAO> movieList = new ArrayList<>();
 
@@ -53,27 +52,37 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         if (savedInstanceState != null) {
             menuOptionSelectedId = savedInstanceState.getInt(SELECTED_MENU);
             sortMethodSelected = savedInstanceState.getInt(SELECTED_SORT_METHOD);
         }
 
+        mNoConnectionItems = findViewById(R.id.no_internet_container);
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(new MoviesAdapter(null, this));
 
         LayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
         cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        loadMovieList();
+    }
+
+    private void loadMovieList() {
         if (!isFavoritesSelected()) {
             loadMoviesListIfConnectionIsAvailable(cm, SortMethod.values()[sortMethodSelected]);
         } else {
-            //TODO: if i get back from detail activity after remove a movie from favorite, the favorites list is not refreshed and still contain that movie
             loadFavoriteMovies();
-            //TODO: remove "retry" button if there is no connection
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadMovieList();
     }
 
     @Override
@@ -140,16 +149,16 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     private void loadMoviesListIfConnectionIsAvailable(final ConnectivityManager cm, final SortMethod sortMethod) {
 
-        LinearLayout noConnectionItems = findViewById(R.id.no_internet_container);
+
         Button retryButton = findViewById(R.id.btn_retry);
 
         if (MovieNetworkUtils.isDeviceOnline(cm)) {
-            noConnectionItems.setVisibility(INVISIBLE);
+            mNoConnectionItems.setVisibility(INVISIBLE);
             if (!isFavoritesSelected()) {
                 loadMoviesData(sortMethod);
             }
         } else {
-            noConnectionItems.setVisibility(VISIBLE);
+            mNoConnectionItems.setVisibility(VISIBLE);
         }
 
         retryButton.setOnClickListener(new OnClickListener() {
@@ -166,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     }
 
     private void loadFavoriteMovies() {
+
+        mNoConnectionItems.setVisibility(INVISIBLE);
 
         String[] projection = {
                 MovieEntry.MOVIE_ID,
@@ -209,8 +220,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         query.close();
 
         mRecyclerView.setAdapter(new MoviesAdapter(movies, this));
-
-        Toast.makeText(this, String.valueOf(query.getCount()), Toast.LENGTH_SHORT).show();
     }
 
     @Override

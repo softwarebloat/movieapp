@@ -4,6 +4,7 @@ package com.softwarebloat.themovieapp;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +24,6 @@ import com.softwarebloat.themovieapp.async.MovieReviewQueryTask;
 import com.softwarebloat.themovieapp.async.MovieTrailerQueryTask;
 import com.softwarebloat.themovieapp.async.OnReviewTaskCompleted;
 import com.softwarebloat.themovieapp.async.OnTrailerTaskCompleted;
-import com.softwarebloat.themovieapp.data.MovieContract;
 import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 import com.softwarebloat.themovieapp.utilities.MovieNetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -31,7 +31,8 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.util.List;
 
-import static android.support.v7.widget.RecyclerView.*;
+import static android.support.v7.widget.RecyclerView.Adapter;
+import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.REVIEW_ENDPOINT;
@@ -43,7 +44,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     private MovieDAO movie;
     private String mTrailerUrl;
     private RecyclerView mReviewsRecyclerViews;
-    private Adapter mReviewsAdapter;
 
     TextView mMovieTitle;
     ImageButton mBtnFavorite;
@@ -55,6 +55,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
 
         mReviewsRecyclerViews = findViewById(R.id.rv_reviews);
         mReviewsRecyclerViews.setLayoutManager(new LinearLayoutManager(this));
+        mReviewsRecyclerViews.setAdapter(new ReviewsAdapter(null));
 
 
         mMovieTitle = findViewById(R.id.tv_movie_title);
@@ -83,7 +84,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                     .error(R.mipmap.ic_placeholder_icon)
                     .into(mPosterMovie);
 
-            if(movieIsAlreadyInFavorites()) {
+            if (movieIsAlreadyInFavorites()) {
                 setFavoriteChecked();
             } else {
                 setFavoriteNotChecked();
@@ -92,7 +93,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
             mBtnFavorite.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(movieIsAlreadyInFavorites()) {
+                    if (movieIsAlreadyInFavorites()) {
                         removeMovieFromFavorites();
                     } else {
                         addMovieToFavorites();
@@ -100,8 +101,11 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                 }
             });
 
-            loadMovieTrailer(movieId);
-            loadMovieReviews(movieId);
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            if (MovieNetworkUtils.isDeviceOnline(cm)) {
+                loadMovieTrailer(movieId);
+                loadMovieReviews(movieId);
+            }
         }
     }
 
@@ -166,7 +170,11 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                 selectionArgs
         );
 
-        setFavoriteNotChecked();
+        if (rowsDeleted == 1) {
+            setFavoriteNotChecked();
+        } else {
+            Toast.makeText(this, "Error removing movie from favorites", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -186,9 +194,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     @Override
     public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
 
-        //TODO: find better way to filter trailer from list
         for (TrailerDAO trailer : trailers) {
-            if(trailer.getType().equals(TRAILER_KEY)) {
+            if (trailer.getType().equals(TRAILER_KEY)) {
                 mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailer.getTrailerId());
             }
         }
@@ -199,7 +206,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     public void onReviewTaskCompleted(List<ReviewDAO> reviews) {
 
         if (reviews.size() > 0) {
-            mReviewsAdapter = new ReviewsAdapter(reviews);
+            Adapter mReviewsAdapter = new ReviewsAdapter(reviews);
             mReviewsRecyclerViews.setAdapter(mReviewsAdapter);
         }
     }
