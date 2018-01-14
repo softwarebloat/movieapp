@@ -30,7 +30,6 @@
 
 
         <ImageView
-            tools:background="@color/colorPrimary"
             android:id="@+id/iv_poster_movie"
             android:layout_width="108dp"
             android:layout_height="168dp"
@@ -40,7 +39,8 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_poster"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+            tools:background="@color/colorPrimary"/>
 
 
         <TextView
@@ -81,27 +81,30 @@
 
         <TextView
             android:id="@+id/tv_overview"
-            android:layout_width="match_parent"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:padding="6dp"
+            android:padding="1dp"
             android:text="@string/overview"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_poster_movie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="@+id/iv_poster_movie"
             tools:text="@string/overview"/>
 
         <TextView
             android:id="@+id/tv_plot_synopsis"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="1dp"
             android:padding="6dp"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_overview"
             app:layout_constraintTop_toBottomOf="@+id/tv_overview"
             tools:text="i'm the movie synopsis!"/>
 
@@ -114,7 +117,7 @@
             android:background="?android:selectableItemBackground"
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/tv_release_data"
-            app:srcCompat="@android:drawable/btn_star" />
+            app:srcCompat="@android:drawable/btn_star"/>
 
         <ImageButton
             android:id="@+id/play_movie_trailer"
@@ -122,10 +125,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:onClick="playMovieTrailer"
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/btn_favorite_movie"
-            app:srcCompat="@android:drawable/ic_media_play"
-            android:onClick="playMovieTrailer"/>
+            app:srcCompat="@android:drawable/ic_media_play"/>
 
         <TextView
             android:id="@+id/tv_review_header"
@@ -135,19 +138,21 @@
             android:layout_marginTop="8dp"
             android:text="@string/reviews"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_plot_synopsis"
+            app:layout_constraintStart_toStartOf="@+id/iv_poster_movie"
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster_movie"
             tools:text="@string/reviews"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_reviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="512dp"
+            android:layout_height="172dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_plot_synopsis"
+            app:layout_constraintStart_toStartOf="@+id/tv_review_header"
             app:layout_constraintTop_toBottomOf="@+id/tv_review_header"/>
+
+
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
