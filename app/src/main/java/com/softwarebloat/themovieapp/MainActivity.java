@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,12 +41,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     private List<MovieDAO> movieList = new ArrayList<>();
 
     private ConnectivityManager cm;
+    LayoutManager mLayoutManager;
+
 
     private static final String SELECTED_SORT_METHOD = "SORT_METHOD";
     private int sortMethodSelected = SortMethod.DEFAULT.ordinal();
 
     private static final String SELECTED_MENU = "SELECTED_MENU";
     private int menuOptionSelectedId = -1;
+
+    private static final String LIST_POSITION = "LIST_POSITION";
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +62,15 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         if (savedInstanceState != null) {
             menuOptionSelectedId = savedInstanceState.getInt(SELECTED_MENU);
             sortMethodSelected = savedInstanceState.getInt(SELECTED_SORT_METHOD);
+            position = savedInstanceState.getInt(LIST_POSITION);
         }
 
         mNoConnectionItems = findViewById(R.id.no_internet_container);
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
 
-        LayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
@@ -89,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_MENU, menuOptionSelectedId);
         outState.putInt(SELECTED_SORT_METHOD, sortMethodSelected);
+        outState.putInt(LIST_POSITION, ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition());
     }
 
     @Override
@@ -240,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         movieList = movies;
         mAdapter = new MoviesAdapter(movieList, this);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.scrollToPosition(position);
 //        mAdapter.notifyDataSetChanged();
     }
 }
