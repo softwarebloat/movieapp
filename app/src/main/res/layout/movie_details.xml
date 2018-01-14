@@ -8,7 +8,6 @@
 
     <android.support.constraint.ConstraintLayout
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -30,7 +29,6 @@
 
 
         <ImageView
-            tools:background="@color/colorPrimary"
             android:id="@+id/iv_poster_movie"
             android:layout_width="108dp"
             android:layout_height="168dp"
@@ -40,7 +38,8 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_poster"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+            tools:background="@color/colorPrimary"/>
 
 
         <TextView
@@ -112,44 +111,43 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="?android:selectableItemBackground"
+            android:contentDescription="@string/add_movie_to_favorite"
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/tv_release_data"
-            app:srcCompat="@android:drawable/btn_star"
-            android:contentDescription="@string/add_movie_to_favorite"/>
-
-        <ImageButton
-            android:id="@+id/play_movie_trailer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
-            app:layout_constraintTop_toBottomOf="@+id/btn_favorite_movie"
-            app:srcCompat="@android:drawable/ic_media_play"
-            android:onClick="playMovieTrailer"
-            android:contentDescription="@string/play_movie_trailer"/>
+            app:srcCompat="@android:drawable/btn_star"/>
 
         <TextView
             android:id="@+id/tv_review_header"
-            android:layout_width="576dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/reviews"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_plot_synopsis"
+            app:layout_constraintTop_toBottomOf="@+id/rv_trailers"
             tools:text="@string/reviews"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_reviews"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_plot_synopsis"
             app:layout_constraintTop_toBottomOf="@+id/tv_review_header"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_trailers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_plot_synopsis"
+            app:layout_constraintTop_toBottomOf="@+id/tv_plot_synopsis"/>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

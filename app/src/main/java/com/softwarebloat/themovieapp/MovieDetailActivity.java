@@ -36,14 +36,13 @@ import static android.support.v7.widget.RecyclerView.OnClickListener;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_BASE_URL;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.POSTER_W342;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.REVIEW_ENDPOINT;
-import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.TRAILER_KEY;
 import static com.softwarebloat.themovieapp.utilities.MovieNetworkUtils.VIDEO_TRAILER_ENDPOINT;
 
-public class MovieDetailActivity extends AppCompatActivity implements OnTrailerTaskCompleted, OnReviewTaskCompleted {
+public class MovieDetailActivity extends AppCompatActivity implements TrailersAdapter.ListItemClickListener, OnTrailerTaskCompleted, OnReviewTaskCompleted {
 
     private MovieDAO movie;
-    private String mTrailerUrl;
     private RecyclerView mReviewsRecyclerViews;
+    private RecyclerView mTrailerRecyclerView;
 
     private TextView mMovieTitle;
     private ImageButton mBtnFavorite;
@@ -55,7 +54,10 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
 
         mReviewsRecyclerViews = findViewById(R.id.rv_reviews);
         mReviewsRecyclerViews.setLayoutManager(new LinearLayoutManager(this));
-        mReviewsRecyclerViews.setAdapter(new ReviewsAdapter(null));
+
+        mTrailerRecyclerView = findViewById(R.id.rv_trailers);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mTrailerRecyclerView.setLayoutManager(layoutManager);
 
 
         mMovieTitle = findViewById(R.id.tv_movie_title);
@@ -191,21 +193,22 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
         mBtnFavorite.setImageDrawable(getDrawable(android.R.drawable.btn_star_big_off));
     }
 
-    public void playMovieTrailer(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTrailerUrl));
-        startActivity(intent);
-    }
 
     @Override
     public void onTrailerTaskCompleted(List<TrailerDAO> trailers) {
 
-        for (TrailerDAO trailer : trailers) {
-            if (trailer.getType().equals(TRAILER_KEY)) {
-                mTrailerUrl = MovieNetworkUtils.buildYoutubeTrailerUrl(trailer.getTrailerId());
-            }
+        if(trailers.size() > 0) {
+            TrailersAdapter trailersAdapter = new TrailersAdapter(trailers, this);
+            mTrailerRecyclerView.setAdapter(trailersAdapter);
         }
     }
 
+
+    @Override
+    public void onTrailerItemClick(String trailerUrl) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+        startActivity(intent);
+    }
 
     @Override
     public void onReviewTaskCompleted(List<ReviewDAO> reviews) {
