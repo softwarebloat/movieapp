@@ -114,7 +114,8 @@
             android:background="?android:selectableItemBackground"
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/tv_release_data"
-            app:srcCompat="@android:drawable/btn_star" />
+            app:srcCompat="@android:drawable/btn_star"
+            android:contentDescription="@string/add_movie_to_favorite"/>
 
         <ImageButton
             android:id="@+id/play_movie_trailer"
@@ -125,7 +126,8 @@
             app:layout_constraintStart_toEndOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toBottomOf="@+id/btn_favorite_movie"
             app:srcCompat="@android:drawable/ic_media_play"
-            android:onClick="playMovieTrailer"/>
+            android:onClick="playMovieTrailer"
+            android:contentDescription="@string/play_movie_trailer"/>
 
         <TextView
             android:id="@+id/tv_review_header"

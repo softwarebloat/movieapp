@@ -45,8 +45,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
     private String mTrailerUrl;
     private RecyclerView mReviewsRecyclerViews;
 
-    TextView mMovieTitle;
-    ImageButton mBtnFavorite;
+    private TextView mMovieTitle;
+    private ImageButton mBtnFavorite;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,8 +135,13 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTrailerT
                 null
         );
 
-        return query != null && query.getCount() > 0;
+        boolean cursorsHasElements = false;
+        if(query != null) {
+            cursorsHasElements = query.getCount() > 0;
+            query.close();
+        }
 
+        return cursorsHasElements;
     }
 
     private void addMovieToFavorites() {

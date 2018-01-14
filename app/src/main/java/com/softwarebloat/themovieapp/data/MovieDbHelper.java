@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 
-public class MovieDbHelper extends SQLiteOpenHelper {
+class MovieDbHelper extends SQLiteOpenHelper {
 
 
     private static final String DATABASE_NAME = "favorites_movies.db";

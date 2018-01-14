@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 public class MovieContract {
 
     static final String CONTENT_AUTHORITY = "com.softwarebloat.themovieapp";
-    static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     static final String PATH_MOVIES = "movies";
 

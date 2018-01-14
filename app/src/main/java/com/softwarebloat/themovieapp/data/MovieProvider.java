@@ -16,7 +16,7 @@ import com.softwarebloat.themovieapp.data.MovieContract.MovieEntry;
 public class MovieProvider extends ContentProvider {
 
 
-    public static final int CODE_MOVIE = 100;
+    private static final int CODE_MOVIE = 100;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MovieDbHelper mMovieHelper;

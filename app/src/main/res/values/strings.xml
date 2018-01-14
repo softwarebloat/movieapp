@@ -10,4 +10,6 @@
     <string name="out_of_ten">/10</string>
     <string name="overview">Overview</string>
     <string name="reviews">Reviews</string>
+    <string name="add_movie_to_favorite">Add movie to favorite</string>
+    <string name="play_movie_trailer">Play movie trailer</string>
 </resources>

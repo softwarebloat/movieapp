@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsAdapterViewHolder> {
 
-    private List<ReviewDAO> reviews;
+    private final List<ReviewDAO> reviews;
 
     public ReviewsAdapter(List<ReviewDAO> reviews) {
         this.reviews = reviews;

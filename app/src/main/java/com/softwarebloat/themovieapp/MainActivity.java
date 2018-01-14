@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
     }
 
     private void loadMovieList() {
-        if (!isFavoritesSelected()) {
+        if (favoritesIsNotSelected()) {
             loadMoviesListIfConnectionIsAvailable(cm, SortMethod.values()[sortMethodSelected]);
         } else {
             loadFavoriteMovies();
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean isFavoritesSelected() {
-        return SortMethod.values()[sortMethodSelected] == SortMethod.FAVORITES;
+    private boolean favoritesIsNotSelected() {
+        return SortMethod.values()[sortMethodSelected] != SortMethod.FAVORITES;
     }
 
     private void clearGridData() {
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
         if (MovieNetworkUtils.isDeviceOnline(cm)) {
             mNoConnectionItems.setVisibility(INVISIBLE);
-            if (!isFavoritesSelected()) {
+            if (favoritesIsNotSelected()) {
                 loadMoviesData(sortMethod);
             }
         } else {
@@ -217,7 +217,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                 movies.add(movie);
             }
         }
-        query.close();
+
+        if (query != null) {
+            query.close();
+        }
 
         mRecyclerView.setAdapter(new MoviesAdapter(movies, this));
     }
