@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         mNoConnectionItems = findViewById(R.id.no_internet_container);
         mRecyclerView = findViewById(R.id.recyclerview_movies);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(new MoviesAdapter(null, this));
 
         LayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -87,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_MENU, menuOptionSelectedId);
         outState.putInt(SELECTED_SORT_METHOD, sortMethodSelected);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
